@@ -8,7 +8,10 @@
     "start": "node dist/index.js",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "db:migrate": "ts-node src/db/migrate.ts",
-    "typecheck": "tsc --noEmit"
+    "db:seed": "ts-node src/db/seed.ts",
+    "typecheck": "tsc --noEmit",
+    "test:matching": "ts-node src/matching/jobEmailMatcher.test.ts",
+    "test:classifier": "ts-node src/email-classifier/__tests__/classifier.test.ts"
   },
   "dependencies": {
     "bullmq": "^5.34.5",

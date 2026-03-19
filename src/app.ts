@@ -3,7 +3,7 @@ import session from 'express-session';
 import passport from 'passport';
 import { configurePassport } from './auth/passport';
 import { getGoogleAuthConfig } from './auth/config';
-import { authRoutes, gmailRoutes, calendarRoutes } from './routes';
+import { authRoutes, gmailRoutes, calendarRoutes, jobsRoutes } from './routes';
 
 configurePassport();
 
@@ -53,6 +53,7 @@ app.use(passport.session());
 app.use('/api/auth', authRoutes);
 app.use('/api/gmail', gmailRoutes);
 app.use('/api/calendar', calendarRoutes);
+app.use('/api/jobs', jobsRoutes);
 
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok' });

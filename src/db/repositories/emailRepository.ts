@@ -48,3 +48,18 @@ export async function countEmailsByAccountId(emailAccountId: string): Promise<nu
   );
   return parseInt(rows[0]?.count ?? '0', 10);
 }
+
+export async function findEmailByIdForAccount(
+  emailId: string,
+  emailAccountId: string
+): Promise<Email | null> {
+  const { rows } = await query<Email>(
+    `SELECT id, email_account_id, message_id, thread_id, subject, "from", "to", snippet, body_text, body_html, received_at, created_at
+     FROM ${TABLE}
+     WHERE id = $1 AND email_account_id = $2
+     LIMIT 1`,
+    [emailId, emailAccountId]
+  );
+  return rows[0] ?? null;
+}
+

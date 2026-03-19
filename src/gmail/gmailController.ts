@@ -1,7 +1,11 @@
 import type { Request, Response } from 'express';
 import { getSessionUser } from '../auth/session';
 import { findEmailAccountById } from '../db/repositories/emailAccountRepository';
-import { findEmailsByAccountId, countEmailsByAccountId } from '../db/repositories/emailRepository';
+import {
+  findEmailsByAccountId,
+  countEmailsByAccountId,
+  findEmailByIdForAccount,
+} from '../db/repositories/emailRepository';
 import { syncGmailForAccount } from './gmailSyncService';
 
 /**
@@ -68,3 +72,35 @@ export async function listEmails(req: Request, res: Response): Promise<void> {
 
   res.json({ emails, total, page, limit });
 }
+
+/**
+ * GET /api/gmail/emails/:emailId - Get a single email (with body) for the current user.
+ */
+export async function getEmail(req: Request, res: Response): Promise<void> {
+  const user = getSessionUser(req);
+  if (!user) {
+    res.status(401).json({ error: 'Authentication required' });
+    return;
+  }
+
+  const account = await findEmailAccountById(user.emailAccountId);
+  if (!account) {
+    res.status(404).json({ error: 'Email account not found' });
+    return;
+  }
+
+  const emailId = String(req.params.emailId);
+  if (!emailId) {
+    res.status(400).json({ error: 'emailId required' });
+    return;
+  }
+
+  const email = await findEmailByIdForAccount(emailId, account.id);
+  if (!email) {
+    res.status(404).json({ error: 'Email not found' });
+    return;
+  }
+
+  res.json(email);
+}
+

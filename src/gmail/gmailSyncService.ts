@@ -9,7 +9,7 @@ import {
 import type { EmailAccount } from '../db/models/emailAccount';
 import { getGmailClient } from './gmailClient';
 
-const MAX_RESULTS = 100;
+const MAX_RESULTS = 4000;
 
 /** Result of parsing Gmail message headers (Subject, From, To, Date). */
 export interface ParsedHeaders {

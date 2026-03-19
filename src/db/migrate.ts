@@ -5,12 +5,12 @@ import { getPool } from './client';
 
 async function migrate() {
   const pool = getPool();
-  const sql = readFileSync(
-    join(__dirname, 'migrations', '001_initial.sql'),
-    'utf-8'
-  );
-  await pool.query(sql);
-  console.log('Migration 001_initial.sql applied.');
+  const migrations = ['001_initial.sql', '002_jobs_companies_applications.sql'];
+  for (const name of migrations) {
+    const sql = readFileSync(join(__dirname, 'migrations', name), 'utf-8');
+    await pool.query(sql);
+    console.log('Migration', name, 'applied.');
+  }
   await pool.end();
 }
 
